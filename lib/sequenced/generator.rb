@@ -1,6 +1,6 @@
 module Sequenced
   class Generator
-    attr_reader :record, :scope, :column, :start_at, :skip
+    attr_reader :record, :scope, :column, :start_at, :skip, :except
 
     def initialize(record, options = {})
       @record = record
@@ -8,6 +8,7 @@ module Sequenced
       @column = options[:column].to_sym
       @start_at = options[:start_at]
       @skip = options[:skip]
+      @except = options[:except]
     end
 
     def set
@@ -26,7 +27,7 @@ module Sequenced
 
     def next_id
       next_id_in_sequence.tap do |id|
-        id += 1 until unique?(id)
+        id += 1 until unique?(id) && !except.map{ |d| d === id }.all?
       end
     end
 
