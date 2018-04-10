@@ -27,7 +27,7 @@ module Sequenced
 
     def next_id
       next_id_in_sequence.tap do |id|
-        id += 1 until unique?(id) && !except.map{ |d| d === id }.all?
+        id += 1 until unique?(id) && !except.map{ |d| d === id }.any?
       end
     end
 
